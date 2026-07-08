@@ -1,0 +1,5 @@
+/* Minimal style to demonstrate CSS loader inclusion */
+p {
+    margin-top: 20px;
+    font-size: 14px;
+  }
