@@ -9,24 +9,24 @@ const Notifications = ({ listNotifications, markNotificationAsRead }) => {
 
   const handleToggleDrawer = () => {
     if (DrawerRef.current) {
-      const visibleClass = css(styles.visible);
-      DrawerRef.current.classList.toggle(visibleClass);
+      DrawerRef.current.classList.toggle(css(styles.visible));
     }
   };
 
   return (
     <div className="Notifications-wrapper">
-      <div className={css(styles.menuItem)} onClick={handleToggleDrawer}>
+      <div className={`menuItem ${css(styles.menuItem)}`} onClick={handleToggleDrawer}>
         Your notifications
       </div>
 
-      <div className={css(styles.Notifications)} ref={DrawerRef}>
+      <div className={`Notifications ${css(styles.notificationsContainer)}`} ref={DrawerRef}>
         <button
           style={{
-            position: 'absolute', right: '2px', top: '2px', cursor: 'pointer',
-            background: 'none', border: 'none'
+            position: 'absolute', right: '3px', top: '3px', cursor: 'pointer',
+            background: 'none', border: 'none', outline: 'none'
           }}
           aria-label="Close"
+          id="closeNotifications"
           onClick={handleToggleDrawer}
         >
           <img src={closeIcon} alt="close icon" width="10px" />
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     padding: '5px',
   },
-  Notifications: {
+  notificationsContainer: {
     opacity: 0,
     visibility: 'hidden',
     transition: 'opacity 0.2s ease-in-out',
@@ -100,5 +100,4 @@ const styles = StyleSheet.create({
   }
 });
 
-// React.memo forces the component to NOT re-render unless data explicitly changes
 export default React.memo(Notifications);
