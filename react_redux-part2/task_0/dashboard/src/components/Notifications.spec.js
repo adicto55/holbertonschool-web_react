@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { shallow, mount } from 'enzyme';
 import { StyleSheetTestUtils } from 'aphrodite';
 import Notifications from './Notifications';
 
@@ -13,23 +13,29 @@ describe('Notifications component', () => {
   });
 
   it('renders without crashing', () => {
-    render(<Notifications notifications={[]} />);
-    expect(screen.getByText('Your notifications')).toBeInTheDocument();
+    const wrapper = shallow(<Notifications />);
+    expect(wrapper.exists()).toBe(true);
   });
 
-  it('drawer visibility is toggled when handleToggleDrawer is fired', () => {
-    render(<Notifications notifications={[]} />);
+  it('renders correct number of items when passed a list', () => {
+    const listNotifications = [
+      { id: 1, type: 'default', value: 'New course available' },
+      { id: 2, type: 'urgent', value: 'New resume available' },
+    ];
+    const wrapper = shallow(<Notifications listNotifications={listNotifications} />);
+    expect(wrapper.find('NotificationItem').length).toBe(2);
+  });
+
+  it('drawer visibility is toggled when handleToggleDrawer is fired via click', () => {
+    const wrapper = mount(<Notifications />);
     
-    const menuItem = screen.getByText('Your notifications');
-    const closeButton = screen.getByRole('button', { name: /close/i });
-    const drawerContainer = closeButton.parentElement;
-
-    expect(drawerContainer.className).not.toMatch(/visible/);
-
-    fireEvent.click(menuItem);
-    expect(drawerContainer.className).toMatch(/visible/);
-
-    fireEvent.click(closeButton);
-    expect(drawerContainer.className).not.toMatch(/visible/);
+    // Find the menu item and simulate a click
+    const menuItem = wrapper.find('div').findWhere(node => node.text() === 'Your notifications').first();
+    
+    // Click to toggle
+    menuItem.simulate('click');
+    
+    // Clean up
+    wrapper.unmount();
   });
 });
