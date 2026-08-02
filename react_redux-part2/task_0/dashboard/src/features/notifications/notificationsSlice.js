@@ -6,7 +6,7 @@ const ENDPOINTS = {
   notifications: `${API_BASE_URL}/notifications.json`,
 };
 
-// Removed displayDrawer from initialState
+// Exclusively notifications array; displayDrawer is removed completely
 const initialState = {
   notifications: [],
 };
@@ -38,9 +38,8 @@ const notificationsSlice = createSlice({
       state.notifications = state.notifications.filter(
         (notification) => notification.id !== id
       );
-      console.log(`Notification ${id} has been marked as read`);
     },
-    // showDrawer and hideDrawer have been removed
+    // showDrawer and hideDrawer have been removed completely
   },
   extraReducers: (builder) => {
     builder.addCase(fetchNotifications.fulfilled, (state, action) => {
@@ -49,7 +48,6 @@ const notificationsSlice = createSlice({
   },
 });
 
-// Excluded showDrawer and hideDrawer from exports
 export const { markNotificationAsRead } = notificationsSlice.actions;
 
 export default notificationsSlice.reducer;
