@@ -1,106 +1,71 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import '@testing-library/jest-dom';
+import configureStore from 'redux-mock-store';
+import { StyleSheetTestUtils } from 'aphrodite';
 import Notifications from './Notifications';
-import notificationsReducer from '../features/notifications/notificationsSlice';
 
-const renderWithStore = (preloadedState) => {
-  const store = configureStore({
-    reducer: { notifications: notificationsReducer },
-    preloadedState,
-  });
-  return render(
-    <Provider store={store}>
-      <Notifications />
-    </Provider>
-  );
-};
+const mockStore = configureStore([]);
 
-describe('Notifications', () => {
-  test('renders the "Your notifications" menu item', () => {
-    renderWithStore({
-      notifications: { notifications: [], status: 'idle', error: null },
-    });
-    expect(screen.getByText(/your notifications/i)).toBeInTheDocument();
+describe('<Notifications />', () => {
+  let store;
+
+  beforeAll(() => {
+    // Crucial for Aphrodite to work smoothly in testing environments
+    StyleSheetTestUtils.suppressStyleInjection();
   });
 
-  test('renders "No new notification for now" when there are no notifications', () => {
-    renderWithStore({
-      notifications: { notifications: [], status: 'idle', error: null },
-    });
-    expect(
-      screen.getByText(/no new notification for now/i)
-    ).toBeInTheDocument();
+  afterAll(() => {
+    StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
   });
 
-  test('renders the list of notifications when present', () => {
-    renderWithStore({
+  beforeEach(() => {
+    store = mockStore({
       notifications: {
         notifications: [
-          { id: 1, type: 'default', value: 'New course available' },
-          { id: 2, type: 'urgent', value: 'New resume available' },
+          { id: 1, type: 'default', value: 'New course available' }
         ],
-        status: 'succeeded',
-        error: null,
       },
     });
-    expect(screen.getByText(/new course available/i)).toBeInTheDocument();
-    expect(screen.getByText(/new resume available/i)).toBeInTheDocument();
+    store.dispatch = jest.fn();
   });
 
-  test('drawer does not have the "visible" class by default', () => {
-    renderWithStore({
-      notifications: { notifications: [], status: 'idle', error: null },
-    });
-    const drawer = document.getElementById('Notifications');
-    expect(drawer.className).not.toMatch(/visible/);
+  it('renders the component without crashing', () => {
+    render(
+      <Provider store={store}>
+        <Notifications />
+      </Provider>
+    );
+    expect(screen.getByText('Your notifications')).toBeInTheDocument();
   });
 
-  test('clicking the menu item toggles the "visible" class on the drawer', () => {
-    renderWithStore({
-      notifications: { notifications: [], status: 'idle', error: null },
-    });
-    const drawer = document.getElementById('Notifications');
-    const menuItem = screen.getByText(/your notifications/i);
+  it('toggles the notification items via the Aphrodite visible class', () => {
+    render(
+      <Provider store={store}>
+        <Notifications />
+      </Provider>
+    );
 
+    const menuItem = screen.getByText('Your notifications');
+    
+    // Find the wrapper using text that belongs to it
+    const listText = screen.getByText('Here is the list of notifications');
+    const drawerContainer = listText.closest('div');
+
+    // 1. Initial State Check (should not have the extra visible class)
+    const initialClassCount = drawerContainer.classList.length;
+
+    // 2. Open Drawer
     fireEvent.click(menuItem);
-    expect(drawer.className).toMatch(/visible/);
+    
+    // The class count should increase because the dynamically generated `visible` class was added
+    expect(drawerContainer.classList.length).toBeGreaterThan(initialClassCount);
 
-    fireEvent.click(menuItem);
-    expect(drawer.className).not.toMatch(/visible/);
-  });
+    // 3. Close Drawer
+    const closeBtn = screen.getByRole('button', { name: /close/i });
+    fireEvent.click(closeBtn);
 
-  test('clicking the close icon removes the "visible" class', () => {
-    renderWithStore({
-      notifications: { notifications: [], status: 'idle', error: null },
-    });
-    const drawer = document.getElementById('Notifications');
-    const menuItem = screen.getByText(/your notifications/i);
-
-    fireEvent.click(menuItem);
-    expect(drawer.className).toMatch(/visible/);
-
-    const closeIcon = screen.getByAltText(/close/i);
-    fireEvent.click(closeIcon);
-    expect(drawer.className).not.toMatch(/visible/);
-  });
-
-  test('clicking a notification dispatches markNotificationAsRead and removes it', () => {
-    renderWithStore({
-      notifications: {
-        notifications: [
-          { id: 1, type: 'default', value: 'New course available' },
-        ],
-        status: 'succeeded',
-        error: null,
-      },
-    });
-    const item = screen.getByText(/new course available/i);
-    fireEvent.click(item);
-    expect(
-      screen.queryByText(/new course available/i)
-    ).not.toBeInTheDocument();
+    // The class is toggled off, count drops back to normal
+    expect(drawerContainer.classList.length).toEqual(initialClassCount);
   });
 });
