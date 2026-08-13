@@ -1,7 +1,7 @@
 import './App.css';
-import holbertonLogo from './assets/holberton-logo.jpg';
-import { getCurrentYear, getFooterCopy } from './utils';
-import Notifications from './Notifications';
+import holbertonLogo from '../assets/holberton-logo.jpg';
+import { getCurrentYear, getFooterCopy } from '../utils/utils';
+import Notifications from '../Notifications/Notifications';
 
 function App() {
   return (
@@ -11,20 +11,20 @@ function App() {
         <h1>School dashboard</h1>
       </div>
 
+      <div className="root-notifications">
+        <Notifications />
+      </div>
+
       <div className="App-body">
         <p>Login to access the full dashboard</p>
 
         <label htmlFor="email">Email</label>
-        <input type="email" id="email" />
+        <input type="text" id="email" />
 
         <label htmlFor="password">Password</label>
-        <input type="password" id="password" />
+        <input type="text" id="password" />
 
         <button type="button">OK</button>
-      </div>
-
-      <div className="root-notifications">
-        <Notifications />
       </div>
 
       <div className="App-footer">
