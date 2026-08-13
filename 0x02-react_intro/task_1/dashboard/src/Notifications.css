@@ -1,8 +1,0 @@
-:root {
-  --main-color: #e01d3f;
-}
-
-.Notifications {
-  border: 3px solid var(--main-color);
-  padding: 50px;
-}
