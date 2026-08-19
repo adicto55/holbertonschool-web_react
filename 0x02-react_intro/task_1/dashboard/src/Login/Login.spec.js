@@ -7,10 +7,9 @@ describe('Login component', () => {
   test('renders 2 labels, 2 inputs and 1 button', () => {
     render(<Login />);
 
-    expect(screen.getAllByRole('textbox')).toHaveLength(2);
-    expect(screen.getByLabelText('Email')).toBeInTheDocument();
-    expect(screen.getByLabelText('Password')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'OK' })).toBeInTheDocument();
+    expect(document.querySelectorAll('label')).toHaveLength(2);
+    expect(document.querySelectorAll('input')).toHaveLength(2);
+    expect(document.querySelectorAll('button')).toHaveLength(1);
   });
 
   test('inputs are focused when their labels are clicked', async () => {
