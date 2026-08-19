@@ -12,8 +12,8 @@ describe('Header component', () => {
   test('renders the heading with the correct text', () => {
     render(<Header />);
 
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'School dashboard'
-    );
+    expect(
+      screen.getByRole('heading', { level: 1 })
+    ).toHaveTextContent('School dashboard');
   });
 });
