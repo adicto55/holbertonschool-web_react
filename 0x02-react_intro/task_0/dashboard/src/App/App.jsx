@@ -8,13 +8,8 @@ function App() {
   return (
     <Fragment>
       <Header />
-
-      <div className="root-notifications">
-        <Notifications />
-      </div>
-
+      <Notifications />
       <Login />
-
       <Footer />
     </Fragment>
   );

@@ -9,7 +9,7 @@ function Login() {
       <input type="email" id="email" />
 
       <label htmlFor="password">Password</label>
-      <input type="password" id="password" />
+      <input type="text" id="password" />
 
       <button type="button">OK</button>
     </div>
