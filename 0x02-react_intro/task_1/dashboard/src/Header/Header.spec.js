@@ -6,14 +6,18 @@ describe('Header component', () => {
   test('renders the Holberton logo', () => {
     render(<Header />);
 
-    expect(screen.getByAltText('holberton logo')).toBeInTheDocument();
+    const logo = screen.getByAltText('holberton logo');
+
+    expect(logo).toBeInTheDocument();
+    expect(logo).toHaveAttribute('src');
   });
 
-  test('renders the heading with the correct text', () => {
+  test('renders the h1 with the correct text', () => {
     render(<Header />);
 
-    expect(
-      screen.getByRole('heading', { level: 1 })
-    ).toHaveTextContent('School dashboard');
+    const heading = screen.getByRole('heading', { level: 1 });
+
+    expect(heading).toBeInTheDocument();
+    expect(heading).toHaveTextContent('School dashboard');
   });
 });
