@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import NotificationItem from './NotificationItem';
 
 describe('NotificationItem component', () => {
-  test('renders default notification with blue color', () => {
+  test('renders default notification correctly', () => {
     render(
       <NotificationItem
         type="default"
@@ -12,11 +12,12 @@ describe('NotificationItem component', () => {
 
     const item = screen.getByRole('listitem');
 
-    expect(item).toHaveStyle('color: blue');
     expect(item).toHaveAttribute('data-notification-type', 'default');
+    expect(item).toHaveStyle('color: blue');
+    expect(item).toHaveTextContent('New course available');
   });
 
-  test('renders urgent notification with red color', () => {
+  test('renders urgent notification correctly', () => {
     render(
       <NotificationItem
         type="urgent"
@@ -26,7 +27,8 @@ describe('NotificationItem component', () => {
 
     const item = screen.getByRole('listitem');
 
-    expect(item).toHaveStyle('color: red');
     expect(item).toHaveAttribute('data-notification-type', 'urgent');
+    expect(item).toHaveStyle('color: red');
+    expect(item).toHaveTextContent('New resume available');
   });
 });

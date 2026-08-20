@@ -20,7 +20,9 @@ function App() {
     {
       id: 3,
       type: 'urgent',
-      html: getLatestNotification(),
+      html: {
+        __html: getLatestNotification(),
+      },
     },
   ];
 

@@ -1,4 +1,4 @@
-function NotificationItem({ type, html, value }) {
+function NotificationItem({ type, value, html }) {
   const style = {
     color: type === 'urgent' ? 'red' : 'blue',
   };
@@ -8,7 +8,7 @@ function NotificationItem({ type, html, value }) {
       <li
         data-notification-type={type}
         style={style}
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={html}
       />
     );
   }

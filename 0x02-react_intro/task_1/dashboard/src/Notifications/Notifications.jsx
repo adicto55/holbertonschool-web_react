@@ -1,8 +1,8 @@
 import './Notifications.css';
 import closeButton from '../assets/close-button.png';
-import { getLatestNotification } from '../utils/utils';
+import NotificationItem from './NotificationItem';
 
-function Notifications() {
+function Notifications({ notifications = [] }) {
   const closeNotifications = () => {
     console.log('Close button has been clicked');
   };
@@ -26,14 +26,14 @@ function Notifications() {
       <p>Here is the list of notifications</p>
 
       <ul>
-        <li data-priority="default">New course available</li>
-        <li data-priority="urgent">New resume available</li>
-        <li
-          data-priority="urgent"
-          dangerouslySetInnerHTML={{
-            __html: getLatestNotification(),
-          }}
-        />
+        {notifications.map((notification) => (
+          <NotificationItem
+            key={notification.id}
+            type={notification.type}
+            value={notification.value}
+            html={notification.html}
+          />
+        ))}
       </ul>
     </div>
   );
