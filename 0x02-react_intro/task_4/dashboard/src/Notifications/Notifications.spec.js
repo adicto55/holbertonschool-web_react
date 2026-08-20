@@ -1,41 +1,93 @@
 import { render, screen } from '@testing-library/react';
 import Notifications from './Notifications';
 
+const notifications = [
+  {
+    id: 1,
+    type: 'default',
+    value: 'New course available',
+  },
+  {
+    id: 2,
+    type: 'urgent',
+    value: 'New resume available',
+  },
+  {
+    id: 3,
+    type: 'urgent',
+    value: 'Urgent requirement',
+    html: {
+      __html: '<strong>Urgent requirement</strong> - complete by EOD',
+    },
+  },
+];
+
 describe('Notifications component', () => {
-  test('renders the three notifications', () => {
-    const notifications = [
-      {
-        id: 1,
-        type: 'default',
-        value: 'New course available',
-      },
-      {
-        id: 2,
-        type: 'urgent',
-        value: 'New resume available',
-      },
-      {
-        id: 3,
-        type: 'urgent',
-        html: {
-          __html: '<strong>Urgent requirement</strong> - complete by EOD',
-        },
-      },
-    ];
+  test('displays notification title in all cases', () => {
+    render(<Notifications />);
 
-    render(<Notifications notifications={notifications} />);
+    expect(screen.getByText('Your notifications')).toBeInTheDocument();
+  });
 
-    const items = screen.getAllByRole('listitem');
+  test('does not display drawer when displayDrawer is false', () => {
+    render(
+      <Notifications
+        displayDrawer={false}
+        notifications={notifications}
+      />
+    );
 
-    expect(items).toHaveLength(3);
+    expect(screen.getByText('Your notifications')).toBeInTheDocument();
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Here is the list of notifications')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('New course available')
+    ).not.toBeInTheDocument();
+  });
 
-    expect(items[0]).toHaveTextContent('New course available');
-    expect(items[1]).toHaveTextContent('New resume available');
-    expect(items[2]).toHaveTextContent('Urgent requirement');
-    expect(items[2]).toHaveTextContent('complete by EOD');
+  test('displays drawer when displayDrawer is true', () => {
+    render(
+      <Notifications
+        displayDrawer={true}
+        notifications={notifications}
+      />
+    );
 
-    expect(items[0]).toHaveStyle('color: blue');
-    expect(items[1]).toHaveStyle('color: red');
-    expect(items[2]).toHaveStyle('color: red');
+    expect(screen.getByText('Your notifications')).toBeInTheDocument();
+
+    expect(
+      screen.getByText('Here is the list of notifications')
+    ).toBeInTheDocument();
+
+    expect(screen.getByRole('button')).toBeInTheDocument();
+
+    expect(
+      screen.getByText('New course available')
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText('New resume available')
+    ).toBeInTheDocument();
+  });
+
+  test('displays no notification message when notifications is empty', () => {
+    render(
+      <Notifications
+        displayDrawer={true}
+        notifications={[]}
+      />
+    );
+
+    expect(screen.getByText('Your notifications')).toBeInTheDocument();
+
+    expect(
+      screen.getByText('Here is the list of notifications')
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText('No new notification for now')
+    ).toBeInTheDocument();
   });
 });

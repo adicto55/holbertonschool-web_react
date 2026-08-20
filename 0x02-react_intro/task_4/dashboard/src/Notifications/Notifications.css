@@ -22,3 +22,26 @@
 .notification-items ul {
   padding-left: 20px;
 }
+
+.notification-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.notification-items {
+  border: 1px dashed black;
+  padding: 10px;
+  position: relative;
+}
+
+.notification-items button {
+  border: 0;
+}
+
+.notification-items ul {
+  padding-left: 20px;
+}
+
+.notification-items li {
+  margin-bottom: 5px;
+}
