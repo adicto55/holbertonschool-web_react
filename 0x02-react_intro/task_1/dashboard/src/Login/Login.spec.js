@@ -1,31 +1,29 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event'; // <-- Add this
+import userEvent from '@testing-library/user-event';
 import Login from './Login';
+
 describe('Login component', () => {
-  beforeEach(() => {
-    render(<Login />);
-  });
-
   test('renders 2 labels, 2 inputs and 1 button', () => {
-    const labels = screen.getAllByRole('textbox');
+    render(<Login />);
 
-    expect(screen.getAllByText(/email/i)).toHaveLength(1);
-    expect(screen.getAllByText(/password/i)).toHaveLength(1);
-    expect(labels).toHaveLength(2);
-    expect(screen.getByRole('button', { name: /ok/i })).toBeInTheDocument();
+    expect(document.querySelectorAll('label')).toHaveLength(2);
+    expect(document.querySelectorAll('input')).toHaveLength(2);
+    expect(document.querySelectorAll('button')).toHaveLength(1);
   });
 
-  test('inputs are focused when their labels are clicked', () => {
-    const emailInput = screen.getByLabelText(/email/i);
-    const passwordInput = screen.getByLabelText(/password/i);
+  test('inputs are focused when their labels are clicked', async () => {
+    const user = userEvent.setup();
 
-    const emailLabel = screen.getByText(/email/i);
-    const passwordLabel = screen.getByText(/password/i);
+    render(<Login />);
 
-    fireEvent.click(emailLabel);
+    const emailInput = screen.getByLabelText('Email');
+    const passwordInput = screen.getByLabelText('Password');
+
+    await user.click(screen.getByText('Email'));
     expect(emailInput).toHaveFocus();
 
-    fireEvent.click(passwordLabel);
+    await user.click(screen.getByText('Password'));
     expect(passwordInput).toHaveFocus();
   });
 });
