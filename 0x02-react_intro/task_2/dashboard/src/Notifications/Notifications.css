@@ -22,11 +22,3 @@
 .notification-items ul {
   padding-left: 20px;
 }
-
-.notification-items li[data-priority='default'] {
-  color: black;
-}
-
-.notification-items li[data-priority='urgent'] {
-  color: #e1003c;
-}
